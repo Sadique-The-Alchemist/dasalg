@@ -8,7 +8,7 @@ fn add_marices(a: &Vec<Vec<i32>>, b: &Vec<Vec<i32>>) -> Vec<Vec<i32>> {
             result[i][j] = a[i][j] + b[i][j];
         }
     }
-    result 
+   return result 
 }
 
 fn substract_marices(a: &Vec<Vec<i32>>, b: &Vec<Vec<i32>>) {
@@ -20,9 +20,10 @@ fn substract_marices(a: &Vec<Vec<i32>>, b: &Vec<Vec<i32>>) {
             result[i][j] = a[i][j] - b[i][j];
         }
     }
+   return result
 }
 
-fn strassan_multiply(a: &Vec<Vec<i32>>, b: &Vec<Vec>>) -> Vec<Vec<i32>> {
+fn strassen_multiply(a: &Vec<Vec<i32>>, b: &Vec<Vec>>) -> Vec<Vec<i32>> {
     let n = a.len();
     if n==1 {
         return vec![vec![a[0][0] * b[0][0]]];
@@ -30,19 +31,19 @@ fn strassan_multiply(a: &Vec<Vec<i32>>, b: &Vec<Vec>>) -> Vec<Vec<i32>> {
     let mid = n/2; 
     let (a11, a12,a21, a22) = split_matrix(a, mid);
     let (b11, b12, b21, b22) = split_matrix(a, mid);
-    let m1 = strassan_multiply(&add_marices(&a11, &a22), &add_marices(&b11, &b22));
-    let m2 = strassan_multiply(&add_marices(&a21, &a22), &b11);
-    let m3 = strassan_multiply(&a11, &substract_marices(&b12, &b22));
-    let m4 = strassan_multiply(&a22, &substract_marices(&b21, &b11));
-    let m5 = strassan_multiply(&strassan_multiply(&add_marices(&a11, &a12), &b22));
-    let m6 = strassan_multiply(&substract_marices(&a21, &a11), &add_marices(&b11, &b12));
-    let m7 = strassan_multiply(&substract_marices(&a12, &a22), &add_marices(&b21, &b22));
+    let m1 = strassen_multiply(&add_marices(&a11, &a22), &add_marices(&b11, &b22));
+    let m2 = strassen_multiply(&add_marices(&a21, &a22), &b11);
+    let m3 = strassen_multiply(&a11, &substract_marices(&b12, &b22));
+    let m4 = strassen_multiply(&a22, &substract_marices(&b21, &b11));
+    let m5 = strassen_multiply(&strassen_multiply(&add_marices(&a11, &a12), &b22));
+    let m6 = strassen_multiply(&substract_marices(&a21, &a11), &add_marices(&b11, &b12));
+    let m7 = strassen_multiply(&substract_marices(&a12, &a22), &add_marices(&b21, &b22));
 
     let c11 = add_marices(&substract_marices(&add_marices(&m1, &m4), &m5), &m7);
     let c12 = add_marices(&m3, &m5);
     let c21 = add_marices(&m2, &m4);
     let c22 = add_marices(&substract_marices(&add_marices(&m1, &m3), &m2), &m6);
-    merge_matrices(c11, c12, c21, c22, n);
+    return merge_matrices(c11, c12, c21, c22, n);
 }
 fn split_matrix(matrix: &Vec<Vec<i32>>,mid: usize) -> (Vec<Vec<i32>>, Vec<Vec<i32>>,Vec<Vec<i32>>, Vec<Vec<i32>>) {
     let mut a11 = vec![vec![0; mid]; mid];
@@ -58,7 +59,7 @@ fn split_matrix(matrix: &Vec<Vec<i32>>,mid: usize) -> (Vec<Vec<i32>>, Vec<Vec<i3
             a22[i][j] = matrix[i + mid][j + mid];
         }
     }
-    (a11, a12, a21, a22)
+   return (a11, a12, a21, a22)
 }
 fn merge_matrices(c11: Vec<Vec<i32>>, c12: Vec<Vec<i32>>, c21: Vec<Vec<i32>>, c22: Vec<Vec<>>, n: usize) -> Vec<Vec<>> {
     let mut result = vec![vec![0; n]; n]; 
@@ -71,6 +72,7 @@ fn merge_matrices(c11: Vec<Vec<i32>>, c12: Vec<Vec<i32>>, c21: Vec<Vec<i32>>, c2
             result[i + mid][j + mid] = c22[i][j];
         }
     }
+   return result
 }
 
 fn main() {
