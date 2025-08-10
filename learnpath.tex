@@ -1,0 +1,357 @@
+\documentclass[10pt]{beamer}
+
+% Theme and color scheme
+\usetheme{Madrid}
+\usecolortheme{beaver}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+% Packages for better formatting
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fontawesome}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+% Custom Rust language definition for listings
+\lstdefinelanguage{Rust}{
+    keywords={fn, let, mut, if, else, for, while, loop, match, struct, enum, impl, trait, use, pub, mod, return, break, continue, self, Self, async, await},
+    keywordstyle=\color{blue}\bfseries,
+    ndkeywords={String, Vec, Option, Result, Box, Arc, Mutex, Some, None, Ok, Err},
+    ndkeywordstyle=\color{blue!70!black}\bfseries,
+    sensitive=true,
+    comment=[l][\color{green!60!black}]{//},
+    morecomment=[s][\color{green!60!black}]{/*}{*/},
+    string=[b][\color{red}]",
+    morestring=[b][\color{red}]',
+}
+
+% Listings settings
+\lstset{
+    language=Rust,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!60!black},
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    frame=single,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=2
+}
+
+% Title slide
+\title{Path to Mastery in Rust Programming}
+\subtitle{From Core Concepts to Advanced Practices}
+\author{Your Name}
+\date{July 11, 2025}
+
+\begin{document}
+
+% Title slide
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% Table of Contents
+\begin{frame}{Outline}
+    \tableofcontents
+\end{frame}
+
+\section{Introduction to Rust}
+\begin{frame}{Why Rust?}
+    \begin{itemize}
+        \item \textbf{Safe}: Memory safety without a garbage collector.
+        \item \textbf{Fast}: Performance comparable to C/C++.
+        \item \textbf{Modern}: Expressive syntax and strong type system.
+        \item \textbf{Use Cases}: Systems programming, web backends, CLI tools, WASM, and more.
+    \end{itemize}
+\end{frame}
+
+\section{Core Concepts to Understand}
+\begin{frame}{1. Ownership and Borrowing}
+    \begin{itemize}
+        \item \textbf{Ownership}: Single owner per value; dropped when out of scope.
+        \item \textbf{Borrowing}: Use \texttt{\&} (immutable) or \texttt{\&mut} (mutable).
+        \item \textbf{Rules}: One mutable or multiple immutable references; no dangling references.
+        \item \textbf{Practice}: Refactor code to use borrowing instead of cloning.
+    \end{itemize}
+    \begin{lstlisting}
+let mut s = String::from("hello");
+let r = &mut s; // Mutable borrow
+r.push_str(", world!");
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{2. Lifetimes}
+    \begin{itemize}
+        \item \textbf{Purpose}: Ensure references are valid for their use.
+        \item \textbf{Syntax}: Use \texttt{'a} for lifetime annotations.
+        \item \textbf{Practice}: Annotate lifetimes in complex structs and functions.
+    \end{itemize}
+    \begin{lstlisting}
+struct Ref<'a> {
+    data: &'a str,
+}
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() { x } else { y }
+}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{3. Pattern Matching}
+    \begin{itemize}
+        \item \textbf{Features}: Use \texttt{match}, \texttt{if let}, \texttt{while let}.
+        \item \textbf{Use Cases}: Handle \texttt{Option}, \texttt{Result}, and custom enums.
+        \item \textbf{Practice}: Use pattern matching for robust control flow.
+    \end{itemize}
+    \begin{lstlisting}
+let opt = Some(42);
+match opt {
+    Some(x) if x > 0 => println!("Positive: {}", x),
+    Some(_) => println!("Non-positive"),
+    None => println!("Nothing"),
+}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{4. Enums and Structs}
+    \begin{itemize}
+        \item \textbf{Enums}: Represent variants (e.g., \texttt{Option}, \texttt{Result}).
+        \item \textbf{Structs}: Model data with methods via \texttt{impl}.
+        \item \textbf{Practice}: Build a state machine using enums and structs.
+    \end{itemize}
+    \begin{lstlisting}
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+}
+struct Point {
+    x: i32,
+    y: i32,
+}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{5. Traits and Generics}
+    \begin{itemize}
+        \item \textbf{Traits}: Define shared behavior (e.g., \texttt{Display}, \texttt{Debug}).
+        \item \textbf{Generics}: Enable reusable code with type parameters.
+        \item \textbf{Practice}: Implement traits for custom types and generic functions.
+    \end{itemize}
+    \begin{lstlisting}
+trait Printable {
+    fn print(&self);
+}
+struct Item<T> {
+    value: T,
+}
+    \end{lstlisting}
+\end{frame}
+
+\section{Practical Skills}
+\begin{frame}{6. Error Handling}
+    \begin{itemize}
+        \item \textbf{Tools}: \texttt{Result}, \texttt{Option}, and \texttt{?} operator.
+        \item \textbf{Practice}: Chain error handling with combinators like \texttt{map} and \texttt{and\_then}.
+    \end{itemize}
+    \begin{lstlisting}
+fn read_file(path: &str) -> Result<String, std::io::Error> {
+    std::fs::read_to_string(path)
+}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{7. Concurrency}
+    \begin{itemize}
+        \item \textbf{Features}: Threads, channels, \texttt{Mutex}, \texttt{Arc}.
+        \item \textbf{Safety}: Compile-time thread safety guarantees.
+        \item \textbf{Practice}: Build a thread-safe counter with \texttt{Arc<Mutex<T>>}.
+    \end{itemize}
+    \begin{lstlisting}
+use std::sync::{Arc, Mutex};
+let data = Arc::new(Mutex::new(0));
+let mut handles = vec![];
+for _ in 0..4 {
+    let data = Arc::clone(&data);
+    handles.push(std::thread::spawn(move || {
+        let mut num = data.lock().unwrap();
+        *num += 1;
+    }));
+}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{8. Cargo and Ecosystem}
+    \begin{itemize}
+        \item \textbf{Cargo}: Manage builds, dependencies, and tests.
+        \item \textbf{Key Commands}: \texttt{cargo new}, \texttt{cargo build}, \texttt{cargo test}.
+        \item \textbf{Crates}: Use \texttt{serde}, \texttt{tokio}, \texttt{reqwest}.
+        \item \textbf{Practice}: Create a project with external crates and tests.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{9. Macros}
+    \begin{itemize}
+        \item \textbf{Types}: Declarative (\texttt{macro\_rules!}) and procedural.
+        \item \textbf{Use Cases}: Reduce boilerplate and generate code.
+        \item \textbf{Practice}: Write a custom macro for logging or validation.
+    \end{itemize}
+    \begin{lstlisting}
+macro_rules! log {
+    ($msg:expr) => {
+        println!("Log: {}", $msg);
+    };
+}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{10. Testing and Documentation}
+    \begin{itemize}
+        \item \textbf{Testing}: Use \texttt{\#[test]} for unit and integration tests.
+        \item \textbf{Documentation}: Write \texttt{///} comments; generate with \texttt{cargo doc}.
+        \item \textbf{Practice}: Add comprehensive tests and docs to a project.
+    \end{itemize}
+    \begin{lstlisting}
+#[test]
+fn test_add() {
+    assert_eq!(2 + 2, 4);
+}
+/// Adds two numbers
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+    \end{lstlisting}
+\end{frame}
+
+\section{Advanced Rust Practices}
+\begin{frame}{11. Avoiding Edge Cases}
+    \begin{itemize}
+        \item \textbf{Bound Checking}: Use \texttt{.get()} instead of indexing to avoid panics.
+        \item \textbf{Option/Result}: Handle \texttt{None} or \texttt{Err} explicitly to prevent crashes.
+        \item \textbf{Practice}: Refactor unsafe code to use safe alternatives.
+    \end{itemize}
+    \begin{lstlisting}
+let arr = [1, 2, 3];
+if let Some(&value) = arr.get(10) {
+    println!("Value: {}", value);
+} else {
+    println!("Index out of bounds");
+}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{12. Advanced Error Handling}
+    \begin{itemize}
+        \item \textbf{Custom Errors}: Define custom error types with \texttt{thiserror} or \texttt{anyhow}.
+        \item \textbf{Context}: Use \texttt{context} or \texttt{with\_context} for detailed error messages.
+        \item \textbf{Practice}: Create a custom error type for a CLI tool.
+    \end{itemize}
+    \begin{lstlisting}
+use thiserror::Error;
+#[derive(Error, Debug)]
+enum MyError {
+    #[error("IO error: {0}")]
+    Io(#[from] std::io::Error),
+    #[error("Invalid input: {0}")]
+    Invalid(String),
+}
+fn process_file(path: &str) -> Result<(), MyError> {
+    let content = std::fs::read_to_string(path)?;
+    Ok(())
+}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{13. Unsafe Rust}
+    \begin{itemize}
+        \item \textbf{When to Use}: FFI, performance-critical code, or low-level operations.
+        \item \textbf{Best Practices}: Minimize \texttt{unsafe} blocks, document invariants, test thoroughly.
+        \item \textbf{Practice}: Write a safe wrapper around an \texttt{unsafe} function.
+    \end{itemize}
+    \begin{lstlisting}
+fn safe_dereference(ptr: *const i32) -> Option<i32> {
+    unsafe {
+        if ptr.is_null() {
+            None
+        } else {
+            Some(*ptr)
+        }
+    }
+}
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{14. Performance Optimization}
+    \begin{itemize}
+        \item \textbf{Zero-Cost Abstractions}: Leverage iterators and inline functions.
+        \item \textbf{Profiling}: Use \texttt{cargo flamegraph} or \texttt{perf} to identify bottlenecks.
+        \item \textbf{Practice}: Optimize a loop-heavy function with iterators.
+    \end{itemize}
+    \begin{lstlisting}
+let sum: i32 = (0..1000).filter(|&x| x % 2 == 0).sum();
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{15. Async Programming}
+    \begin{itemize}
+        \item \textbf{Tools}: Use \texttt{tokio} or \texttt{async-std} for async/await.
+        \item \textbf{Best Practices}: Avoid blocking calls in async code; use \texttt{.await} correctly.
+        \item \textbf{Practice}: Build an async HTTP client with \texttt{reqwest}.
+    \end{itemize}
+    \begin{lstlisting}
+use reqwest::Client;
+async fn fetch_data(url: &str) -> Result<String, reqwest::Error> {
+    let client = Client::new();
+    client.get(url).send().await?.text().await
+}
+    \end{lstlisting}
+\end{frame}
+
+\section{Practice Projects}
+\begin{frame}{Hands-On Projects}
+    \begin{enumerate}
+        \item \textbf{CLI Tool}: Build a file parser with \texttt{clap} and custom error handling.
+        \item \textbf{Web Server}: Create a REST API with \texttt{axum} and async routes.
+        \item \textbf{Game}: Develop a 2D game with \texttt{bevy}, handling state with enums.
+        \item \textbf{Concurrent System}: Implement a thread pool with \texttt{rayon}.
+        \item \textbf{Open Source}: Contribute to a Rust crate, focusing on edge cases.
+    \end{enumerate}
+\end{frame}
+
+\section{Resources}
+\begin{frame}{Learning Resources}
+    \begin{itemize}
+        \item \textbf{Books}:
+            \begin{itemize}
+                \item \textit{The Rust Programming Language} (The Book)
+                \item \textit{Rust for Rustaceans} (advanced topics)
+            \end{itemize}
+        \item \textbf{Online}:
+            \begin{itemize}
+                \item Rust Playground (\texttt{https://play.rust-lang.org})
+                \item Exercism Rust Track (\texttt{https://exercism.org/tracks/rust})
+            \end{itemize}
+        \item \textbf{Community}: Rust Discord, Reddit, or X communities.
+    \end{itemize}
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}{Next Steps to Mastery}
+    \begin{itemize}
+        \item \textbf{Consistency}: Code daily, tackling complex challenges.
+        \item \textbf{Projects}: Build real-world apps with advanced features.
+        \item \textbf{Community}: Share knowledge and learn from Rustaceans.
+        \item \textbf{Stay Updated}: Follow Rust editions and new crates.
+    \end{itemize}
+    \vfill
+    \centering
+    \textbf{Master Rust with safety and performance!} \faSmileO
+\end{frame}
+
+\end{document}
